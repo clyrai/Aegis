@@ -1,5 +1,5 @@
 # Pinned for reproducibility
-pytest==8.4.1
+pytest==8.4.2
 pytest-timeout==2.3.1
 typing-extensions==4.15.0
 fastapi==0.116.1
