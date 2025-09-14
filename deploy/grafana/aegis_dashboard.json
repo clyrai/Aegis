@@ -1,0 +1,164 @@
+{
+  "title": "Aegis Overview",
+  "uid": "aegis-overview",
+  "timezone": "browser",
+  "tags": ["aegis", "privacy", "api"],
+  "refresh": "5s",
+  "time": { "from": "now-30m", "to": "now" },
+  "templating": {
+    "list": [
+      {
+        "type": "query",
+        "name": "endpoint",
+        "label": "Endpoint",
+        "datasource": "Prometheus",
+        "query": "label_values(aegis_requests_total, endpoint)",
+        "includeAll": true,
+        "allValue": ".*",
+        "refresh": 2
+      },
+      {
+        "type": "query",
+        "name": "status",
+        "label": "HTTP Status",
+        "datasource": "Prometheus",
+        "query": "label_values(aegis_requests_total, status)",
+        "includeAll": true,
+        "allValue": ".*",
+        "refresh": 2
+      }
+    ]
+  },
+  "panels": [
+    { "type": "row", "title": "Overview", "collapsed": false, "gridPos": {"h": 1, "w": 24, "x": 0, "y": 0} },
+    {
+      "type": "stat",
+      "title": "Requests (2m)",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 6, "w": 6, "x": 0, "y": 1},
+      "targets": [ { "expr": "sum(increase(aegis_requests_total{endpoint=~\"$endpoint\",status=~\"$status\"}[2m]))", "instant": true } ],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"], "values": false } }
+    },
+    {
+      "type": "stat",
+      "title": "Error rate (5xx, 2m)",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 6, "w": 6, "x": 6, "y": 1},
+      "targets": [ { "expr": "100 * (sum(increase(aegis_requests_total{status=~\"5..\",endpoint=~\"$endpoint\"}[2m])) / clamp_min(sum(increase(aegis_requests_total{endpoint=~\"$endpoint\"}[2m])), 1))", "instant": true } ],
+      "fieldConfig": { "defaults": { "unit": "percent" } }
+    },
+    {
+      "type": "stat",
+      "title": "RPS (1m)",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 6, "w": 6, "x": 12, "y": 1},
+      "targets": [ { "expr": "sum(rate(aegis_requests_total{endpoint=~\"$endpoint\",status=~\"$status\"}[1m]))", "instant": true } ],
+      "fieldConfig": { "defaults": { "unit": "req/s" } }
+    },
+    {
+      "type": "stat",
+      "title": "Latency p95 (2m)",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 6, "w": 6, "x": 18, "y": 1},
+      "targets": [ { "expr": "histogram_quantile(0.95, sum(rate(aegis_request_latency_seconds_bucket{endpoint=~\"$endpoint\"}[2m])) by (le))", "instant": true } ],
+      "fieldConfig": { "defaults": { "unit": "s" } }
+    },
+
+    { "type": "row", "title": "Traffic", "collapsed": false, "gridPos": {"h": 1, "w": 24, "x": 0, "y": 7} },
+    {
+      "type": "timeseries",
+      "title": "Requests per second",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 7, "w": 12, "x": 0, "y": 8},
+      "targets": [ { "expr": "sum(rate(aegis_requests_total{endpoint=~\"$endpoint\",status=~\"$status\"}[1m]))" } ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Requests by status",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 7, "w": 12, "x": 12, "y": 8},
+      "options": { "legend": { "showLegend": true }, "displayMode": "gradient" },
+      "targets": [ { "expr": "sum by (status) (rate(aegis_requests_total{endpoint=~\"$endpoint\"}[1m]))" } ]
+    },
+
+    { "type": "row", "title": "Latency", "collapsed": false, "gridPos": {"h": 1, "w": 24, "x": 0, "y": 15} },
+    {
+      "type": "timeseries",
+      "title": "Latency p50/p95/p99",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
+      "targets": [
+        { "expr": "histogram_quantile(0.50, sum(rate(aegis_request_latency_seconds_bucket{endpoint=~\"$endpoint\"}[2m])) by (le))" },
+        { "expr": "histogram_quantile(0.95, sum(rate(aegis_request_latency_seconds_bucket{endpoint=~\"$endpoint\"}[2m])) by (le))" },
+        { "expr": "histogram_quantile(0.99, sum(rate(aegis_request_latency_seconds_bucket{endpoint=~\"$endpoint\"}[2m])) by (le))" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Latency p95 by endpoint",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16},
+      "targets": [ { "expr": "histogram_quantile(0.95, sum by (le,endpoint) (rate(aegis_request_latency_seconds_bucket[2m])))", "legendFormat": "{{endpoint}}" } ]
+    },
+
+    { "type": "row", "title": "Breakdowns", "collapsed": false, "gridPos": {"h": 1, "w": 24, "x": 0, "y": 24} },
+    {
+      "type": "table",
+      "title": "Top endpoints by RPS (2m)",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 25},
+      "targets": [ { "expr": "topk(5, sum by (endpoint) (rate(aegis_requests_total[2m])))", "instant": true } ]
+    },
+    {
+      "type": "table",
+      "title": "Requests by status (2m)",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 25},
+      "targets": [ { "expr": "sum by (status)(increase(aegis_requests_total[2m]))", "instant": true } ]
+    },
+
+    { "type": "row", "title": "Health", "collapsed": false, "gridPos": {"h": 1, "w": 24, "x": 0, "y": 33} },
+    {
+      "type": "stat",
+      "title": "Target up",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 5, "w": 6, "x": 0, "y": 34},
+      "targets": [ { "expr": "avg(up{job=\"aegis\"})", "instant": true } ]
+    },
+    {
+      "type": "stat",
+      "title": "Scrape duration (95p)",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 5, "w": 6, "x": 6, "y": 34},
+      "targets": [ { "expr": "histogram_quantile(0.95, sum(rate(scrape_duration_seconds_bucket{job=\"aegis\"}[5m])) by (le))", "instant": true } ],
+      "fieldConfig": { "defaults": { "unit": "s" } }
+    },
+    {
+      "type": "timeseries",
+      "title": "Process memory (RSS)",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 5, "w": 6, "x": 12, "y": 34},
+      "targets": [ { "expr": "process_resident_memory_bytes" } ],
+      "fieldConfig": { "defaults": { "unit": "bytes" } }
+    },
+    {
+      "type": "timeseries",
+      "title": "Process CPU (rate)",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 5, "w": 6, "x": 18, "y": 34},
+      "targets": [ { "expr": "rate(process_cpu_seconds_total[2m])" } ],
+      "fieldConfig": { "defaults": { "unit": "percentunit" } }
+    },
+
+    { "type": "row", "title": "Python GC", "collapsed": true, "gridPos": {"h": 1, "w": 24, "x": 0, "y": 39} },
+    {
+      "type": "timeseries",
+      "title": "GC objects collected (rate by gen)",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 6, "w": 24, "x": 0, "y": 40},
+      "targets": [ { "expr": "sum by (generation) (rate(python_gc_objects_collected_total[5m]))" } ]
+    }
+  ],
+  "schemaVersion": 39,
+  "version": 3
+}

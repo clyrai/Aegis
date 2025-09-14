@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aegis"
+version = "0.0.1"
+description = "Aegis — Privacy-preserving ML orchestration for Clyrai"
+authors = [{ name = "Clyrai" }]
+readme = "README.md"
+requires-python = ">=3.9"
+keywords = ["differential-privacy", "federated-learning", "opacus", "flower", "fastapi"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: OS Independent",
+]
+license = { text = "Apache-2.0" }
+
+[project.optional-dependencies]
+# Heavy deps are optional until later stages
+full = [
+  "torch>=2.1.0; platform_system != 'Windows'",
+  "opacus>=1.4.0; platform_system != 'Windows'",
+  "fastapi",
+  "uvicorn[standard]",
+  "httpx",
+  "pydantic",
+  "flower>=1.7.0",
+  "scikit-learn>=1.3.0",
+  "tensorflow>=2.12.0; platform_system != 'Windows'",
+  "streamlit>=1.37.0",
+]
+
+[tool.mypy]
+python_version = "3.11"
+warn_unused_ignores = true
+warn_return_any = true
+ignore_missing_imports = true
+exclude = ["tests/", "examples/"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["aegis*"]
+exclude = ["tests*"]
+
+[tool.ruff]
+line-length = 200
+
+[tool.ruff.lint]
+extend-ignore = ["I001"]

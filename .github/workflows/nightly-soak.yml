@@ -1,0 +1,85 @@
+name: Nightly Soak & Scale
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    # 06:00 UTC daily
+    - cron: '0 6 * * *'
+
+concurrency:
+  group: nightly-soak-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  soak:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt', '**/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          set -euxo pipefail
+          if [[ -f pyproject.toml ]]; then
+            pip install --upgrade pip
+            pip install .[dev]
+          elif [[ -f requirements.txt ]]; then
+            pip install --upgrade pip
+            pip install -r requirements.txt
+          else
+            pip install --upgrade pip pytest
+          fi
+
+      - name: Print environment info
+        run: |
+          python --version
+          pip --version
+          pip list
+
+      - name: Run stress scenarios (lightweight)
+        shell: bash
+        run: |
+          set -euxo pipefail
+          if [[ -f tests/performance/test_stress_scenarios.sh ]]; then
+            bash tests/performance/test_stress_scenarios.sh
+          else
+            echo "No stress scenario script found; skipping"
+          fi
+
+      - name: Run soak & scale test
+        shell: bash
+        run: |
+          set -euxo pipefail
+          if [[ -f tests/performance/test_soak_and_scale.sh ]]; then
+            bash tests/performance/test_soak_and_scale.sh
+          else
+            echo "No soak & scale script found; skipping"
+          fi
+
+      - name: Upload soak artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: soak-results-${{ github.run_id }}
+          path: |
+            test_results/**
+            logs/**
+          if-no-files-found: ignore

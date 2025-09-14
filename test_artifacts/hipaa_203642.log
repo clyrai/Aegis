@@ -1,0 +1,47 @@
+[2025-09-13T20:36:42+05:30] Step 1 — Check API readiness
+[2025-09-13T20:36:42+05:30] Waiting for API at http://localhost:8000 ...
+[2025-09-13T20:36:42+05:30] API is reachable.
+[2025-09-13T20:36:42+05:30] Step 2 — Register participants (c1, c2)
+{
+  "status": "ok",
+  "audit": "{\"timestamp\":\"2025-09-13T15:06:42.793826+00:00\",\"actor\":\"admin\",\"action\":\"participant:register\",\"params_hash\":\"06728cc8a67f3d945ff876fa2986787ac8fcfc9c6d0328f14d7d579bc9663f26\",\"outcome\":\"ok\",\"prev_hash\":\"9420367bca4084407b51e426b03ec1a624e8f23cb5720ae0862fcc0c087c1c8d\"}"
+}
+{
+  "status": "ok",
+  "audit": "{\"timestamp\":\"2025-09-13T15:06:42.807511+00:00\",\"actor\":\"admin\",\"action\":\"participant:register\",\"params_hash\":\"9e266f7bd1d2094d2bbf7bfde0b9bfb2c04fa79d98d1933849dd19e978cb1b08\",\"outcome\":\"ok\",\"prev_hash\":\"f0f381fa6d9dd34ce26df6f866f1d37cb42e66e23543a8bb18b90df25f626c99\"}"
+}
+[2025-09-13T20:36:42+05:30] Step 3 — Configure DP (clip=1.0, noise=1.2, sample_rate=0.01, delta=1e-5, accountant=rdp)
+{
+  "status": "ok",
+  "audit": "{\"timestamp\":\"2025-09-13T15:06:42.823497+00:00\",\"actor\":\"operator\",\"action\":\"dp:configure\",\"params_hash\":\"a0810258438bf10c2bbaf0057a8bc75250c29c0cc94d15570d792392873177d6\",\"outcome\":\"ok\",\"prev_hash\":\"3c36b2e954f27c005953538ebe156ab85fd0d3be14351e112b93d053d4bc30ba\"}"
+}
+[2025-09-13T20:36:42+05:30] Step 4 — Select aggregator: krum
+{
+  "status": "ok",
+  "audit": "{\"timestamp\":\"2025-09-13T15:06:42.839863+00:00\",\"actor\":\"operator\",\"action\":\"strategy:select\",\"params_hash\":\"a9fdcdb14d06a07f4b499e92f204d25060225cc3c72f3b4ea469af067810e24e\",\"outcome\":\"ok\",\"prev_hash\":\"9839003884c5ff047ad60f319e307573653c22c98220b10115f09a14ea1bc757\"}"
+}
+[2025-09-13T20:36:42+05:30] Step 5 — Start training: session_id=hipaa_203642, rounds=6
+{
+  "status": "started",
+  "audit": "{\"timestamp\":\"2025-09-13T15:06:42.884229+00:00\",\"actor\":\"operator\",\"action\":\"training:start\",\"params_hash\":\"cf197509fb780187e0739953cc789381dee7ef1e1887a9893026adb4e52fa0a3\",\"outcome\":\"ok\",\"prev_hash\":\"f24ec1f18071a9ef30446c68115b01e714e82e518700910d155fe39cdd71441a\"}"
+}
+[2025-09-13T20:36:42+05:30] Step 6 — Monitor in Grafana
+[2025-09-13T20:36:42+05:30] Open Grafana at http://localhost:3000 (see docs: technical/observability_and_dashboards.md)
+[2025-09-13T20:36:42+05:30] Tip: Filter dashboards by session_id='hipaa_203642' to isolate this run.
+[2025-09-13T20:36:42+05:30] Step 7 — Poll training status...
+[2025-09-13T20:36:42+05:30] status=running round=0/6 eta=11.96263337135315s epsilon≈0.000022223222222222222
+[2025-09-13T20:36:44+05:30] status=running round=0/6 eta=10.91212010383606s epsilon≈0.000022223222222222222
+[2025-09-13T20:36:45+05:30] status=running round=1/6 eta=9.852496862411499s epsilon≈0.000022223222222222222
+[2025-09-13T20:36:46+05:30] status=running round=1/6 eta=8.802323818206787s epsilon≈0.000022223222222222222
+[2025-09-13T20:36:47+05:30] status=running round=2/6 eta=7.749826192855835s epsilon≈0.00004444544444444445
+[2025-09-13T20:36:48+05:30] status=running round=2/6 eta=6.693324327468872s epsilon≈0.00004444544444444445
+[2025-09-13T20:36:49+05:30] status=running round=3/6 eta=5.631685256958008s epsilon≈0.00006666766666666667
+[2025-09-13T20:36:50+05:30] status=running round=3/6 eta=4.564516305923462s epsilon≈0.00006666766666666667
+[2025-09-13T20:36:51+05:30] status=running round=4/6 eta=3.501598596572876s epsilon≈0.0000888898888888889
+[2025-09-13T20:36:52+05:30] status=running round=4/6 eta=2.419719696044922s epsilon≈0.0000888898888888889
+[2025-09-13T20:36:53+05:30] status=running round=5/6 eta=1.3537321090698242s epsilon≈0.00011111211111111112
+[2025-09-13T20:36:54+05:30] status=running round=5/6 eta=0.2671515941619873s epsilon≈0.00011111211111111112
+[2025-09-13T20:36:55+05:30] status=completed round=6/6 eta=0.0s epsilon≈0.00013333433333333333
+[2025-09-13T20:36:55+05:30] Step 8 — Generate compliance report
+[2025-09-13T20:36:55+05:30] Report written: test_artifacts/report_hipaa_203642.md
+[2025-09-13T20:36:55+05:30] Done (Healthcare HIPAA playbook).

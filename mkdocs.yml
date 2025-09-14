@@ -1,0 +1,58 @@
+site_name: Aegis Docs
+site_description: Privacy-preserving ML orchestration platform
+docs_dir: docs
+site_dir: site
+theme:
+  name: material
+  language: en
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - content.code.copy
+    - toc.integrate
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true
+  - tables
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - pymdownx.magiclink
+nav:
+  - Home: index.md
+  - Basics:
+    - Quick tour: basics/quick_tour.md
+    - First steps: basics/first_steps.md
+    - Privacy explainer: basics/privacy_explainer.md
+    - Personas: basics/personas.md
+    - FAQ: basics/faq.md
+    - Glossary: basics/glossary.md
+  - Features:
+    - Overview: features/overview.md
+    - Differentiators: features/differentiators.md
+    - Use cases: features/use_cases.md
+    - Security model: features/security_model.md
+    - Compliance mapping: features/compliance_mapping.md
+  - Technical:
+    - Architecture: technical/architecture.md
+    - Getting started: technical/getting_started.md
+    - Install & deploy: technical/install_and_deploy.md
+    - Configuration matrix: technical/configuration_matrix.md
+    - Train a model: technical/train_model.md
+    - Production playbooks: technical/playbooks.md
+    - Run playbook scripts: technical/run_playbook_scripts.md
+    - Operations: technical/operations.md
+    - Examples (models):
+      - PyTorch + Opacus (DP): technical/examples_pytorch_dp.md
+      - TensorFlow (non-DP): technical/examples_tensorflow.md
+      - Scikit-learn baseline: technical/examples_sklearn.md
+    - Privacy tuning playbook: technical/privacy_tuning_playbook.md
+    - Federation strategies: technical/federation_strategy_guide.md
+    - Security hardening: technical/security_hardening.md
+    - Observability & dashboards: technical/observability_and_dashboards.md
+    - Performance tuning: technical/performance_tuning.md
+    - Backup & recovery: technical/backup_and_recovery.md
+    - Change Grafana credentials: technical/grafana_credentials.md
+    - Compliance reports: technical/compliance_reports.md
+    - API reference: technical/api_reference.md
+    - Troubleshooting: technical/troubleshooting.md

@@ -1,0 +1,35 @@
+groups:
+  - name: aegis-slo
+    interval: 30s
+    rules:
+      - alert: AegisHighErrorRate
+        expr: |
+          sum(rate(aegis_requests_total{status=~"5.."}[5m]))
+            /
+          clamp_min(sum(rate(aegis_requests_total[5m])), 1)
+            > 0.05
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Aegis high error rate (>5% for 10m)"
+          description: "Investigate API errors and recent deploys."
+
+      - alert: AegisHighLatencyP95
+        expr: |
+          histogram_quantile(0.95, sum(rate(aegis_request_latency_seconds_bucket[5m])) by (le)) > 1
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Aegis p95 latency > 1s for 10m"
+          description: "Increased tail latency; check load and recent changes."
+
+      - alert: PrometheusTargetDown
+        expr: avg_over_time(up{job="aegis"}[5m]) < 1
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Prometheus target down (aegis)"
+          description: "Prometheus cannot scrape the Aegis API." 

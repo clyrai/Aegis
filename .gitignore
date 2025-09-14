@@ -1,0 +1,8 @@
+# Local credentials and env files (do not commit)
+deploy/grafana/credentials/*.txt
+deploy/.env
+.env
+*.env
+
+# Built documentation site (mkdocs)
+site/

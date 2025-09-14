@@ -1,0 +1,18 @@
+apiVersion: v2
+name: aegis
+version: 0.1.0
+appVersion: "0.1.0"
+description: Aegis - privacy-preserving ML orchestration platform
+home: https://github.com/clyrai/aegis
+keywords:
+  - differential-privacy
+  - federated-learning
+  - fastapi
+  - flower
+  - opacus
+sources:
+  - https://github.com/clyrai/aegis
+maintainers:
+  - name: Clyrai
+    email: support@clyrai.com
+icon: https://raw.githubusercontent.com/clyrai/aegis/main/docs/logo.png

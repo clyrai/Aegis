@@ -1,0 +1,6 @@
+[Performance] Stress scenarios
+[Performance] CPU burst (compute-bound loop)
+acc 845.8255065940814 elapsed 0.5002835830091499
+[Performance] Memory pressure (allocate ~100MB then free)
+allocated and freed
+[Performance] OK

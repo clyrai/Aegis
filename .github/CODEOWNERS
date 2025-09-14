@@ -1,0 +1,8 @@
+# Code ownership for review routing
+* @clyrai/maintainers
+
+# Sensitive areas
+/aegis/ @clyrai/maintainers
+/deploy/ @clyrai/maintainers
+/docs/ @clyrai/maintainers
+/tests/ @clyrai/maintainers

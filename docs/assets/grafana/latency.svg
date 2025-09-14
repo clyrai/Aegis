@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <style>
+      .bg{fill:#0b0f14}
+      .frame{fill:#111820;stroke:#2a3b4a;stroke-width:3}
+      .title{fill:#9cd67b;font-family:Arial,Helvetica,sans-serif;font-size:42px}
+      .subtitle{fill:#8aa2b4;font-family:Arial,Helvetica,sans-serif;font-size:24px}
+      .accent{fill:#9cd67b}
+    </style>
+  </defs>
+  <rect class="bg" width="1600" height="900"/>
+  <rect x="30" y="30" width="1540" height="840" rx="8" class="frame"/>
+  <text x="60" y="90" class="title">Latency & Breakdowns (placeholder)</text>
+  <g transform="translate(60,140)">
+    <rect width="1480" height="300" rx="6" class="frame"/>
+    <text x="20" y="40" class="subtitle">Latency p50/p95/p99</text>
+    <rect x="20" y="60" width="1440" height="200" fill="#13212e"/>
+    <rect x="20" y="260" width="1440" height="2" class="accent"/>
+  </g>
+  <g transform="translate(60,470)">
+    <rect width="720" height="320" rx="6" class="frame"/>
+    <text x="20" y="40" class="subtitle">Latency p95 by endpoint</text>
+  </g>
+  <g transform="translate(820,470)">
+    <rect width="720" height="320" rx="6" class="frame"/>
+    <text x="20" y="40" class="subtitle">Requests by status (2m)</text>
+  </g>
+  <text x="60" y="820" class="subtitle">Replace this SVG with a real screenshot: docs/assets/grafana/latency.svg</text>
+</svg>

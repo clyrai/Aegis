@@ -1,0 +1,15 @@
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.pytest_cache
+.mypy_cache
+.ruff_cache
+.venv
+.git
+.gitignore
+.github
+benchmarks
+examples
+k8s
+**/*.ipynb

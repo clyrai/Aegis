@@ -1,0 +1,183 @@
+Metadata-Version: 2.4
+Name: aegis
+Version: 0.0.1
+Summary: Aegis — Privacy-preserving ML orchestration for Clyrai
+Author: Clyrai
+Keywords: differential-privacy,federated-learning,opacus,flower,fastapi
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Provides-Extra: full
+Requires-Dist: torch>=2.1.0; platform_system != "Windows" and extra == "full"
+Requires-Dist: opacus>=1.4.0; platform_system != "Windows" and extra == "full"
+Requires-Dist: fastapi; extra == "full"
+Requires-Dist: uvicorn[standard]; extra == "full"
+Requires-Dist: httpx; extra == "full"
+Requires-Dist: pydantic; extra == "full"
+Requires-Dist: flower>=1.7.0; extra == "full"
+Requires-Dist: scikit-learn>=1.3.0; extra == "full"
+Requires-Dist: tensorflow>=2.12.0; platform_system != "Windows" and extra == "full"
+Requires-Dist: streamlit>=1.37.0; extra == "full"
+Dynamic: license-file
+
+# Aegis — Privacy-Preserving ML Orchestration for Clyrai
+
+Aegis is a production-oriented platform that automates Differential Privacy (DP) and Federated Learning (FL) for enterprise ML. It provides:
+- DP-SGD via Opacus with epsilon targeting and step-wise accounting
+- Federated coordination on Flower with robust aggregators (Krum, Trimmed Mean)
+- Secure API (FastAPI) with mTLS, RBAC, audit logs, and compliance reporting
+- CLI/Dashboard, examples, tests, and deploy artifacts
+
+This repository is delivered in stages. This README now includes how to run the API/CLI locally, via Docker, and via Kubernetes, along with tests.
+
+## Architecture (Stage 1)
+
+```mermaid
+flowchart LR
+  subgraph Clients & Data Owners
+    A[Participants / Edge clients\n- Local datasets\n- DP-augmented trainers]
+  end
+
+  subgraph Control Plane (Aegis Core)
+    B[FastAPI Service\n- mTLS termination\n- RBAC & Audit\n- DP & FL configs]
+    C[Privacy Engine (Opacus)\n- DP-SGD\n- Epsilon targeting\n- Stepwise accounting]
+    D[Federated Coordinator (Flower)\n- Aggregators: Krum, Trimmed Mean\n- Straggler mgmt, health]
+    E[Compliance Reporter\n- Markdown/PDF reports]
+    F[Audit Log Store\n- JSON logs\n- rotation]
+  end
+
+  subgraph Data Plane
+    G[Flower Server]
+    H[Flower Clients]
+  end
+
+  A <--> H
+  H -->|Signed updates| G
+  G <--> D
+  B <--> C
+  B <--> D
+  B --> E
+  B --> F
+
+  classDef boundary stroke:#555,stroke-width:2px,stroke-dasharray: 4 2;
+  class B,C,D,E,F boundary
+```
+
+### Components & Responsibilities
+- Privacy Engine (`aegis/privacy_engine.py`):
+  - DP-SGD via Opacus; exposes epsilon targeting and step-wise accounting.
+  - First-class parameters: noise multiplier, clipping norm, sample rate, delta.
+- Federated Coordinator (`aegis/federated_coordinator.py`):
+  - Flower-based strategy with Krum and Trimmed Mean; participant auth; straggler and retries; health pings.
+- API (`aegis/api.py`):
+  - FastAPI with mTLS, RBAC (admin/operator/viewer), input validation, OpenAPI; structured audit logs.
+- Compliance Reporter (`aegis/compliance/report.py`):
+  - Generates Markdown and PDF mapping DP config + training audit to GDPR/HIPAA/EU AI Act narratives.
+- UI / CLI (`aegis/cli.py` or `aegis/dashboard.py`):
+  - End-to-end control, real-time charts (accuracy, loss, epsilon), privacy sliders.
+
+### Data Flow & Trust Boundaries
+- Clients never upload raw data; they train locally and send signed model updates.
+- mTLS is enforced between all services and clients. Certificates issued by platform CA; short-lived and rotated.
+- RBAC gates sensitive actions (start/stop training, DP config changes, report generation).
+- Audit logs are append-only JSON with actor, action, params hash, and outcome; suited for external SIEM shipping.
+
+### Dependency Choices
+- DP: Opacus (PyTorch) with RDP/Gaussian accounting.
+- FL: Flower for orchestration and simulation; custom aggregators.
+- API: FastAPI + Uvicorn/Gunicorn.
+- UI/CLI: Streamlit or Click (to be decided in Stage 5).
+- Testing: pytest; security tests for membership inference and inversion.
+- Deploy: Docker, docker-compose, Kubernetes manifests.
+
+## Stage 2 — DifferentialPrivacyEngine
+- Module: `aegis/privacy_engine.py` with:
+  - epsilon_targeting(accuracy_goal, delta) → (epsilon, noise_multiplier)
+  - stepwise_accounting(steps, delta) → epsilon
+  - Config for clipping norm, noise multiplier, sample rate; JSON serialization
+  - Helper to attach Opacus PrivacyEngine for DP-SGD
+- Tests: `tests/test_dp_engine.py` validate accountant values, utility decrease under stronger privacy, and config serialization.
+
+### How to run Stage 2 tests
+
+Optional but recommended: create a Python virtualenv first.
+
+```bash
+# macOS / zsh
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+pytest -q
+```
+
+If PyTorch installation fails via pip, follow PyTorch’s official installation guide for your platform and then re-run `pip install -r requirements.txt`.
+
+---
+
+## Run the API locally
+
+```bash
+python -m uvicorn aegis.api:app --host 127.0.0.1 --port 8000
+```
+
+Health check: http://127.0.0.1:8000/healthz
+
+## CLI quickstart
+
+```bash
+python -m aegis.cli demo --rounds 3 --no-spawn-api --url http://127.0.0.1:8000
+```
+
+Or spawn a local API in-process:
+
+```bash
+python -m aegis.cli demo --rounds 3 --spawn-api --port 8002
+```
+
+## Docker
+
+Build and run:
+
+```bash
+docker build -t clyrai/aegis:dev .
+docker run --rm -p 8000:8000 clyrai/aegis:dev
+```
+
+Or via docker-compose:
+
+```bash
+docker compose up --build
+```
+
+## Kubernetes (minikube or any cluster)
+
+```bash
+kubectl apply -f k8s/deployment.yaml
+kubectl get pods
+kubectl port-forward svc/aegis 8000:80
+```
+
+Then open http://127.0.0.1:8000/healthz
+
+## Observability and Verification
+
+- Metrics: scrape `/metrics` with Prometheus; import `deploy/grafana/aegis_dashboard.json` into Grafana.
+- Alerts: see `docs/ALERTING_RUNBOOK.md`.
+- Audit integrity:
+  - JSONL: `python -m aegis.cli audit verify-jsonl /var/log/aegis_audit.jsonl`
+  - SQLite+HMAC: `AEGIS_AUDIT_HMAC_KEY=... python -m aegis.cli audit verify-sqlite /var/lib/aegis/audit.sqlite`
+
+## CI: Nightly Soak & Scale
+
+A scheduled workflow `.github/workflows/nightly-soak.yml` runs light stress and soak/scale tests. Artifacts are uploaded for inspection.
+
+## Documentation map
+
+- Start here: `docs/INDEX.md`
+- Quickstart: `docs/QUICKSTART.md`
+- Sales demo: `docs/SALES_DEMO.md`
+- Operations & production checklist: `docs/OPERATIONS.md`, `docs/PRODUCTION_CHECKLIST.md`
+

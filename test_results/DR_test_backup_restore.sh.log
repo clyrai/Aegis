@@ -1,0 +1,17 @@
+[DR] Backup/restore
+{'checksum': '86d60ca90a49ce0ef47f687c4e1e1a3034d53a069cb54d6c3661458ddb08da4a', 'count': 1}
+./tests/disaster_recovery/test_backup_restore.sh: line 34: 62178 Killed: 9               python -  <<PY
+import uvicorn
+from aegis.api import app
+uvicorn.run(app, host="127.0.0.1", port=$PORT, log_level="warning")
+PY
+
+[DR] Simulate restore by restarting with same audit file
+{'checksum': 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', 'count': 0}
+./tests/disaster_recovery/test_backup_restore.sh: line 54: 62188 Killed: 9               python -  <<PY
+import uvicorn
+from aegis.api import app
+uvicorn.run(app, host="127.0.0.1", port=$PORT, log_level="warning")
+PY
+
+[DR] OK

@@ -1,0 +1,89 @@
+replicaCount: 1
+
+image:
+  repository: clyrai/aegis
+  tag: dev
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 10001
+  fsGroup: 10001
+  seccompProfile:
+    type: RuntimeDefault
+
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop: ["ALL"]
+
+env:
+  requireMtlsSim: true
+  gunicorn:
+    workers: 2
+    bind: 0.0.0.0:8000
+    timeout: 60
+
+mtls:
+  enabled: true
+  secretName: aegis-tls
+
+metrics:
+  enabled: true
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: aegis.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+  # - secretName: aegis-tls
+  #   hosts:
+  #     - aegis.local
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 70
+  # targetMemoryUtilizationPercentage: 80
+
+pdb:
+  enabled: true
+  minAvailable: 1
+
+networkPolicy:
+  enabled: true
+  allowFromNamespaces: []
+  allowFromCidrs: []
+  port: 8000
+
+serviceMonitor:
+  enabled: false
+  namespace: ""
+  interval: 15s
+  labels: {}
+
+topologySpreadConstraints:
+  enabled: false
+  maxSkew: 1
+  topologyKey: kubernetes.io/hostname
+  whenUnsatisfiable: ScheduleAnyway
+

@@ -1,0 +1,5 @@
+Aegis has been deployed.
+
+Service: {{ include "aegis.fullname" . }}
+
+If metrics are enabled, scrape on /metrics at port 8000.

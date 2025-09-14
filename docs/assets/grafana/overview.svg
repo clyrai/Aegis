@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <style>
+      .bg{fill:#0b0f14}
+      .frame{fill:#111820;stroke:#2a3b4a;stroke-width:3}
+      .title{fill:#9cd67b;font-family:Arial,Helvetica,sans-serif;font-size:42px}
+      .subtitle{fill:#8aa2b4;font-family:Arial,Helvetica,sans-serif;font-size:24px}
+      .accent{fill:#9cd67b}
+    </style>
+  </defs>
+  <rect class="bg" width="1600" height="900"/>
+  <rect x="30" y="30" width="1540" height="840" rx="8" class="frame"/>
+  <text x="60" y="90" class="title">Aegis Overview (placeholder)</text>
+  <text x="60" y="140" class="subtitle">Requests | Error rate | RPS | Latency p95</text>
+  <g transform="translate(60,200)">
+    <rect width="700" height="240" rx="6" class="frame"/>
+    <text x="20" y="40" class="subtitle">Traffic - Requests per second</text>
+    <rect x="20" y="60" width="660" height="150" fill="#13212e"/>
+    <rect x="20" y="180" width="660" height="2" class="accent"/>
+  </g>
+  <g transform="translate(820,200)">
+    <rect width="700" height="240" rx="6" class="frame"/>
+    <text x="20" y="40" class="subtitle">Requests by status</text>
+    <rect x="20" y="60" width="660" height="150" fill="#13212e"/>
+    <rect x="20" y="180" width="660" height="2" class="accent"/>
+  </g>
+  <text x="60" y="780" class="subtitle">Replace this SVG with a real screenshot: docs/assets/grafana/overview.svg</text>
+</svg>

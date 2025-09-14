@@ -1,0 +1,10 @@
+# Compose override for demo recording only (NOT for production)
+# - Disables API rate limiting
+# - Speeds up training rounds for more visible dashboard motion
+# Usage:
+#   docker-compose -f deploy/docker-compose.yml -f deploy/docker-compose.demo.yml up -d aegis
+services:
+  aegis:
+    environment:
+      AEGIS_DISABLE_RATE_LIMIT: "1"
+      AEGIS_ROUND_DURATION_S: "1.0"

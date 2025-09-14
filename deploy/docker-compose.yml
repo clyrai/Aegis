@@ -1,0 +1,106 @@
+services:
+  aegis:
+    build: ..
+    image: clyrai/aegis:dev
+    ports:
+      - "8000:8000"
+    environment:
+      - AEGIS_API_URL=http://aegis:8000
+      - GUNICORN_WORKERS=1
+      - AEGIS_ROUND_DURATION_S=2.0
+    healthcheck:
+      # Use Python for healthcheck (curl may not be installed in image)
+      test: ["CMD-SHELL", "python -c 'import sys,urllib.request,socket; socket.setdefaulttimeout(2); r=urllib.request.urlopen(\"http://localhost:8000/healthz\"); sys.exit(0 if r.getcode()==200 else 1)' "]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: aegis-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/alert_rules.yml:/etc/prometheus/alert_rules.yml:ro
+      - prom_data:/prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.retention.time=15d
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O- http://localhost:9090/-/ready >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: aegis-grafana
+    depends_on:
+      - prometheus
+    ports:
+      - "3000:3000"
+    command:
+      - sh
+      - -lc
+      - >-
+          PASS=$$(cat /run/secrets/grafana_admin_password 2>/dev/null || true);
+          USER=$${GRAFANA_ADMIN_USER:-admin};
+          if [ -n "$$PASS" ]; then
+            /usr/share/grafana/bin/grafana cli admin reset-admin-password "$$PASS" || true;
+          fi;
+          if [ "$$USER" != "admin" ]; then
+            /usr/share/grafana/bin/grafana cli admin create-user --name "Admin" --login "$$USER" --password "$$PASS" --role Admin --email admin@example.com || true;
+          fi;
+          exec /run.sh
+    environment:
+      GF_SECURITY_ADMIN_USER: "${GRAFANA_ADMIN_USER:-admin}"
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_AUTH_ANONYMOUS_ENABLED: "false"
+      GF_SECURITY_DISABLE_GRAVATAR: "true"
+      GF_SECURITY_ALLOW_EMBEDDING: "false"
+      GF_SECURITY_ADMIN_PASSWORD__FILE: "/run/secrets/grafana_admin_password"
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
+    volumes:
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./grafana/aegis_dashboard.json:/etc/grafana/dashboards/aegis_dashboard.json:ro
+      - grafana_data:/var/lib/grafana
+    secrets:
+      - source: grafana_admin_password
+        target: grafana_admin_password
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:3000/api/health | grep -q 'ok' "]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+secrets:
+  grafana_admin_password:
+    file: ./grafana/credentials/admin_password.txt
+
+volumes:
+  prom_data:
+  grafana_data:

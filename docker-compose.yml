@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  aegis:
+    build: .
+    image: clyrai/aegis:dev
+    ports:
+      - "${AEGIS_HOST_PORT-8000}:8000"
+    environment:
+      - AEGIS_API_URL=http://aegis:8000
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys,urllib.request;\n\n\ntry:\n r=urllib.request.urlopen('http://127.0.0.1:8000/healthz',timeout=3); sys.exit(0 if r.status==200 else 1)\nexcept Exception:\n sys.exit(1)"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s

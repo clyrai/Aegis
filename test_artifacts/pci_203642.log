@@ -1,0 +1,46 @@
+[2025-09-13T20:36:42+05:30] Step 1 — Check API readiness
+[2025-09-13T20:36:42+05:30] Waiting for API at http://localhost:8000 ...
+[2025-09-13T20:36:42+05:30] API is reachable.
+[2025-09-13T20:36:42+05:30] Step 2 — Register participants (c1, c2)
+{
+  "status": "ok",
+  "audit": "{\"timestamp\":\"2025-09-13T15:06:42.793089+00:00\",\"actor\":\"admin\",\"action\":\"participant:register\",\"params_hash\":\"9420367bca4084407b51e426b03ec1a624e8f23cb5720ae0862fcc0c087c1c8d\",\"outcome\":\"ok\",\"prev_hash\":\"d55f4af89b2f8da69c2a6a443e029a2146693cee0165a7dcf6379e3de43e7962\"}"
+}
+{
+  "status": "ok",
+  "audit": "{\"timestamp\":\"2025-09-13T15:06:42.807797+00:00\",\"actor\":\"admin\",\"action\":\"participant:register\",\"params_hash\":\"f49242256a47f1b53dbb864ed27dc32fc16342670cd0a007832a527870638a79\",\"outcome\":\"ok\",\"prev_hash\":\"9e266f7bd1d2094d2bbf7bfde0b9bfb2c04fa79d98d1933849dd19e978cb1b08\"}"
+}
+[2025-09-13T20:36:42+05:30] Step 3 — Configure DP (clip=1.0, noise=0.8, sample_rate=0.02, delta=1e-6, accountant=rdp)
+{
+  "status": "ok",
+  "audit": "{\"timestamp\":\"2025-09-13T15:06:42.822580+00:00\",\"actor\":\"operator\",\"action\":\"dp:configure\",\"params_hash\":\"3c36b2e954f27c005953538ebe156ab85fd0d3be14351e112b93d053d4bc30ba\",\"outcome\":\"ok\",\"prev_hash\":\"b5ff5a63dcdd40f8bc3c727837ae5c6f172b130d9f0512633dd0614c05073c27\"}"
+}
+[2025-09-13T20:36:42+05:30] Step 4 — Select aggregator: trimmed_mean
+{
+  "status": "ok",
+  "audit": "{\"timestamp\":\"2025-09-13T15:06:42.838712+00:00\",\"actor\":\"operator\",\"action\":\"strategy:select\",\"params_hash\":\"dc347e71af52ccc23cc8c118218467cc50c54042cd44f67d3c3e41c5b3f6c9d9\",\"outcome\":\"ok\",\"prev_hash\":\"2284645c3f31794d099a73e5572493a132394b44fb5f7b4dac64eea90ad90a25\"}"
+}
+[2025-09-13T20:36:42+05:30] Step 5 — Start training: session_id=pci_203642, rounds=6
+{
+  "status": "started",
+  "audit": "{\"timestamp\":\"2025-09-13T15:06:42.883586+00:00\",\"actor\":\"operator\",\"action\":\"training:start\",\"params_hash\":\"f24ec1f18071a9ef30446c68115b01e714e82e518700910d155fe39cdd71441a\",\"outcome\":\"ok\",\"prev_hash\":\"a9fdcdb14d06a07f4b499e92f204d25060225cc3c72f3b4ea469af067810e24e\"}"
+}
+[2025-09-13T20:36:42+05:30] Step 6 — Monitor in Grafana
+[2025-09-13T20:36:42+05:30] Open Grafana at http://localhost:3000 (see docs: technical/observability_and_dashboards.md)
+[2025-09-13T20:36:42+05:30] Tip: Filter dashboards by session_id='pci_203642' to isolate this run.
+[2025-09-13T20:36:42+05:30] Step 7 — Poll training status...
+[2025-09-13T20:36:42+05:30] status=running rounds=0/6 eta=11.961865663528442s epsilon≈0.000022223222222222222
+[2025-09-13T20:36:44+05:30] status=running rounds=0/6 eta=10.91176724433899s epsilon≈0.000022223222222222222
+[2025-09-13T20:36:45+05:30] status=running rounds=1/6 eta=9.851606607437134s epsilon≈0.000022223222222222222
+[2025-09-13T20:36:46+05:30] status=running rounds=1/6 eta=8.80139970779419s epsilon≈0.000022223222222222222
+[2025-09-13T20:36:47+05:30] status=running rounds=2/6 eta=7.748638153076172s epsilon≈0.00004444544444444445
+[2025-09-13T20:36:48+05:30] status=running rounds=2/6 eta=6.691197633743286s epsilon≈0.00004444544444444445
+[2025-09-13T20:36:49+05:30] status=running rounds=3/6 eta=5.631027698516846s epsilon≈0.00006666766666666667
+[2025-09-13T20:36:50+05:30] status=running rounds=3/6 eta=4.564338207244873s epsilon≈0.00006666766666666667
+[2025-09-13T20:36:51+05:30] status=running rounds=4/6 eta=3.5010368824005127s epsilon≈0.0000888898888888889
+[2025-09-13T20:36:52+05:30] status=running rounds=4/6 eta=2.418734073638916s epsilon≈0.0000888898888888889
+[2025-09-13T20:36:53+05:30] status=running rounds=5/6 eta=1.3528070449829102s epsilon≈0.00011111211111111112
+[2025-09-13T20:36:54+05:30] status=running rounds=5/6 eta=0.2690587043762207s epsilon≈0.00011111211111111112
+[2025-09-13T20:36:55+05:30] status=completed rounds=6/6 eta=0.0s epsilon≈0.00013333433333333333
+[2025-09-13T20:36:55+05:30] Step 8 — Generate compliance report
+[2025-09-13T20:36:55+05:30] Wrote test_artifacts/report_pci_203642.md

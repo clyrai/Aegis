@@ -1,0 +1,21 @@
+# Local OIDC test harness using Dex
+# Usage: docker-compose -f deploy/docker-compose.yml -f deploy/docker-compose.oidc.yml -f deploy/docker-compose.oidc-test.yml up -d grafana dex
+services:
+  dex:
+    image: ghcr.io/dexidp/dex:v2.41.1
+    container_name: aegis-dex
+    command: ["dex", "serve", "/etc/dex/config.yaml"]
+    ports:
+      - "5556:5556"   # host access for browser, issuer = http://localhost:5556/dex
+    volumes:
+      - ./dex/config.yaml:/etc/dex/config.yaml:ro
+    restart: unless-stopped
+  grafana:
+    environment:
+      GRAFANA_OIDC_CLIENT_ID: "grafana"
+      GRAFANA_OIDC_AUTH_URL: "http://dex:5556/dex/auth"
+      GRAFANA_OIDC_TOKEN_URL: "http://dex:5556/dex/token"
+      GRAFANA_OIDC_USERINFO_URL: "http://dex:5556/dex/userinfo"
+      GRAFANA_ROOT_URL: "http://localhost:3000"
+    depends_on:
+      - dex
