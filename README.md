@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/brand/aegis-hero.png" alt="Aegis – Private ML. Collaborative Intelligence." width="900" />
+  <img src="docs/assets/brand/main.png" alt="Aegis – Private ML. Collaborative Intelligence." width="900" />
 </p>
 
 # Aegis
