@@ -52,7 +52,7 @@ jobs:
           cosign sign ghcr.io/${{ github.repository }}:latest
 
       - name: Generate SBOM (image)
-        uses: anchore/sbom-action@v0.17.6
+        uses: anchore/sbom-action@v0.20.5
         with:
           image: ghcr.io/${{ github.repository }}:${{ steps.vars.outputs.version }}
           artifact-name: sbom-image-${{ steps.vars.outputs.version }}.spdx.json

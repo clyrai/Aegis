@@ -40,13 +40,13 @@ jobs:
         run: |
           docker build -t aegis:test .
       - name: Generate SBOM (repo)
-        uses: anchore/sbom-action@v0.17.6
+        uses: anchore/sbom-action@v0.20.5
         with:
           path: .
           artifact-name: sbom-repo-spdx.json
           format: spdx-json
       - name: Generate SBOM (image)
-        uses: anchore/sbom-action@v0.17.6
+        uses: anchore/sbom-action@v0.20.5
         with:
           image: aegis:test
           artifact-name: sbom-image-spdx.json
