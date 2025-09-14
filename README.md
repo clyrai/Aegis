@@ -78,19 +78,6 @@ Teardown:
 make docs-down
 ```
 
-## Show me (one scroll)
-
-- End-to-end in seconds: start, run HIPAA playbook, watch dashboards, generate report.
-- Watch this short demo:
-
-<p align="center">
-  <img src="docs/assets/media/show-me.gif" alt="Aegis – One‑scroll demo" width="900" />
-</p>
-
-Tip: while recording Grafana, generate traffic with:
-```zsh
-make demo-load DURATION=60 BASE_URL=http://127.0.0.1:8000 SESSION_ID=hipaa_run
-```
 
 ## Architecture at a glance
 - Privacy Engine (`aegis/privacy_engine.py`): Opacus DP‑SGD, RDP accounting, epsilon targeting.
