@@ -12,9 +12,12 @@ Participants
 	```
 
 Datasets
-- Register: `POST /datasets`
+- Register client dataset metadata: `POST /dataset/register`
 	```bash
-	http POST :8000/datasets X-Role:admin name=demo format=csv
+	curl -fsS -H 'X-Role: admin' -H 'Content-Type: application/json' \
+	  -d '{"client_id":"c1","num_samples":500,"num_features":10,"missing_fraction":0.0,
+	       "class_counts":{"0":450,"1":50},"schema":["f1","f2"]}' \
+	  http://localhost:8000/dataset/register
 	```
 
 Privacy configuration
@@ -44,9 +47,13 @@ Training sessions
 	```
 
 Compliance report
-- Generate: `GET /compliance/report`
+- Generate Markdown JSON and extract `.markdown`:
 	```bash
-	http GET :8000/compliance/report X-Role:viewer > report.md
+	curl -fsS -H 'X-Role: viewer' :8000/compliance/report | jq -r .markdown > report.md
+	```
+- Or request a PDF directly:
+	```bash
+	http GET :8000/compliance/report?format=pdf X-Role:viewer > report.pdf
 	```
 
 See OpenAPI at `/docs` or `/openapi.json` for full schemas and error responses.

@@ -1,7 +1,7 @@
 Metadata-Version: 2.4
 Name: aegis
 Version: 0.0.1
-Summary: Aegis — Privacy-preserving ML orchestration for Clyrai
+Summary: Aegis — Privacy-preserving ML orchestration for clyrai
 Author: Clyrai
 Keywords: differential-privacy,federated-learning,opacus,flower,fastapi
 Classifier: Programming Language :: Python :: 3

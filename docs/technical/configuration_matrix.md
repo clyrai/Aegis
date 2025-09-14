@@ -31,10 +31,10 @@ http POST :8000/dp/config X-Role:operator clipping_norm:=0.5 noise_multiplier:=2
 http POST :8000/dp/config X-Role:operator clipping_norm:=1.0 noise_multiplier:=1.0 sample_rate:=0.01 delta:=1e-5 accountant=rdp
 
 # Robust aggregation preset (Trimmed Mean 10%)
-http POST :8000/strategy X-Role:operator strategy=trimmed_mean trim_percent:=0.1
+http POST :8000/strategy X-Role:operator strategy=trimmed_mean
 
 # Byzantine tolerance preset (Krum, m=2)
-http POST :8000/strategy X-Role:operator strategy=krum krum_m:=2
+http POST :8000/strategy X-Role:operator strategy=krum
 ```
 
 curl equivalents
@@ -44,7 +44,7 @@ curl -fsS -H 'X-Role: operator' -H 'Content-Type: application/json' \
 curl -fsS -H 'X-Role: operator' -H 'Content-Type: application/json' \
 	-d '{"clipping_norm":1.0,"noise_multiplier":1.0,"sample_rate":0.01,"delta":1e-5,"accountant":"rdp"}' http://localhost:8000/dp/config
 curl -fsS -H 'X-Role: operator' -H 'Content-Type: application/json' \
-	-d '{"strategy":"trimmed_mean","trim_percent":0.1}' http://localhost:8000/strategy
+	-d '{"strategy":"trimmed_mean"}' http://localhost:8000/strategy
 curl -fsS -H 'X-Role: operator' -H 'Content-Type: application/json' \
-	-d '{"strategy":"krum","krum_m":2}' http://localhost:8000/strategy
+	-d '{"strategy":"krum"}' http://localhost:8000/strategy
 ```

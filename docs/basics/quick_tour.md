@@ -7,7 +7,7 @@ What you’ll see
 
 1) Start Aegis
 - Make sure Docker is running
-- Start services: `docker compose -f deploy/docker-compose.yml up -d`
+- Start services: `docker compose -f deploy/docker-compose.yml up -d` (or `docker-compose -f deploy/docker-compose.yml up -d`)
 - Open API docs: http://localhost:8000/docs
 
 2) Register two participants
@@ -27,6 +27,8 @@ What you’ll see
 - Grafana: http://localhost:3000 (default dashboard is provisioned)
 
 7) Create a report
-- `http GET :8000/compliance/report X-Role:viewer > tour_report.md`
+- `http GET :8000/compliance/report X-Role:viewer | jq -r .markdown > tour_report.md`
+	- Alternative with curl:
+		- `curl -fsS -H 'X-Role: viewer' http://localhost:8000/compliance/report | jq -r .markdown > tour_report.md`
 
 Next: basics/privacy_explainer.md for an approachable overview of DP and FL.

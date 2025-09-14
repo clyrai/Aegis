@@ -20,10 +20,10 @@ Choosing quickly
 Copy‑paste examples
 ```zsh
 # Select Trimmed Mean
-http POST :8000/strategy X-Role:operator strategy=trimmed_mean trim_percent:=0.1
+http POST :8000/strategy X-Role:operator strategy=trimmed_mean
 
 # Select Krum
-http POST :8000/strategy X-Role:operator strategy=krum krum_m:=2
+http POST :8000/strategy X-Role:operator strategy=krum
 
 # Start a 5‑round session with chosen strategy
 http POST :8000/training/start X-Role:operator session_id=fed_test rounds:=5
@@ -32,9 +32,9 @@ http POST :8000/training/start X-Role:operator session_id=fed_test rounds:=5
 curl equivalents
 ```zsh
 curl -fsS -H 'X-Role: operator' -H 'Content-Type: application/json' \
-	-d '{"strategy":"trimmed_mean","trim_percent":0.1}' http://localhost:8000/strategy
+	-d '{"strategy":"trimmed_mean"}' http://localhost:8000/strategy
 curl -fsS -H 'X-Role: operator' -H 'Content-Type: application/json' \
-	-d '{"strategy":"krum","krum_m":2}' http://localhost:8000/strategy
+	-d '{"strategy":"krum"}' http://localhost:8000/strategy
 curl -fsS -H 'X-Role: operator' -H 'Content-Type: application/json' \
 	-d '{"session_id":"fed_test","rounds":5}' http://localhost:8000/training/start
 ```

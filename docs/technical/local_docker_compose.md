@@ -58,13 +58,19 @@ Start a short run and then check status.
 # Start 10 rounds
 curl -fsS -X POST \
   -H 'Content-Type: application/json' \
-  -H 'X-Role: admin' \
+  -H 'X-Role: operator' \
   http://localhost:8000/training/start \
   -d '{"session_id":"demo-quick","rounds":10}'
 
 # Check progress
 curl -fsS -H 'X-Role: viewer' \
   'http://localhost:8000/training/status?session_id=demo-quick' | jq .
+
+## 4.1) Generate a quick compliance report
+```zsh
+curl -fsS -H 'X-Role: viewer' http://localhost:8000/compliance/report | jq -r .markdown > report.md
+open report.md
+```
 ```
 
 ## 5) Teardown

@@ -118,11 +118,14 @@ Choose your path
 - Look at request rates, latency, scrape health, epsilon consumption (if charted)
 
 6) Generate a compliance report
-- `http GET :8000/compliance/report X-Role:viewer > ./report_run1.md`
-  - curl:
-    ```zsh
-    curl -fsS -H 'X-Role: viewer' http://localhost:8000/compliance/report | jq -r .markdown > ./report_run1.md
-    ```
+- Markdown (JSON extract):
+  ```zsh
+  curl -fsS -H 'X-Role: viewer' http://localhost:8000/compliance/report | jq -r .markdown > ./report_run1.md
+  ```
+- Or PDF:
+  ```zsh
+  curl -fsS -H 'X-Role: viewer' 'http://localhost:8000/compliance/report?format=pdf' > ./report_run1.pdf
+  ```
 - Share this with non‑technical stakeholders.
 
 Tips

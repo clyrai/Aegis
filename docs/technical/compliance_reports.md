@@ -9,9 +9,14 @@ What’s included
 - Training audit: participants (counts), timestamps, strategy, versions.
 - Regulatory mappings: GDPR, HIPAA, EU AI Act narratives; DPIA-style risk notes.
 
-How to generate
+How to generate (Markdown)
 ```zsh
-curl -fsS -H 'X-Role: viewer' http://localhost:8000/compliance/report > report.md
+curl -fsS -H 'X-Role: viewer' http://localhost:8000/compliance/report | jq -r .markdown > report.md
+```
+
+How to generate (PDF)
+```zsh
+curl -fsS -H 'X-Role: viewer' 'http://localhost:8000/compliance/report?format=pdf' > report.pdf
 ```
 
 PDF export
