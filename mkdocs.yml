@@ -21,6 +21,8 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Basics:
+    - Beginner A–Z: basics/beginner_a_to_z.md
+    - Professional A–Z: basics/professional_a_to_z.md
     - Quick tour: basics/quick_tour.md
     - First steps: basics/first_steps.md
     - Privacy explainer: basics/privacy_explainer.md
