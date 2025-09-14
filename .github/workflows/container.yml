@@ -51,7 +51,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Trivy Image scan
-        uses: aquasecurity/trivy-action@0.24.0
+        uses: aquasecurity/trivy-action@0.33.1
         with:
           image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.build-and-push.outputs.digest }}
           format: 'sarif'
