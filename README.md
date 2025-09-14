@@ -12,8 +12,7 @@ Private ML. Collaborative Intelligence.
   <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/License-Apache%202.0-green.svg" /></a>
   <!-- TODO: Replace with real badge when CI is wired -->
   <img alt="CI" src="https://img.shields.io/badge/CI-passing-brightgreen.svg" />
-  <!-- TODO: Replace with real Docker pulls badge after publishing image -->
-  <img alt="Docker Pulls" src="https://img.shields.io/badge/Docker%20pulls-soon-blue.svg" />
+  <a href="https://github.com/clyrai/Aegis/pkgs/container/aegis"><img alt="GHCR" src="https://img.shields.io/badge/Container-ghcr.io%2Fclyrai%2Faegis-blue?logo=github" /></a>
   
 </p>
 
@@ -78,6 +77,34 @@ Teardown:
 make docs-down
 ```
 
+## Public Docker image (GHCR)
+
+Pull the published image from GitHub Container Registry. Images are multi-arch (linux/amd64, linux/arm64).
+
+```zsh
+# Latest stable
+docker pull ghcr.io/clyrai/aegis:latest
+
+# Or pin to a version
+docker pull ghcr.io/clyrai/aegis:v0.1.2
+
+# Run API on :8000
+docker run --rm -p 8000:8000 ghcr.io/clyrai/aegis:v0.1.2
+```
+
+Apple Silicon (M1/M2) note: Docker selects arm64 automatically. To force:
+
+```zsh
+docker pull --platform linux/arm64 ghcr.io/clyrai/aegis:v0.1.2
+```
+
+Verify platforms in the manifest list:
+
+```zsh
+docker buildx imagetools inspect ghcr.io/clyrai/aegis:v0.1.2
+```
+
+Optional: verify Cosign signature and provenance once public or when authenticated.
 
 ## Architecture at a glance
 - Privacy Engine (`aegis/privacy_engine.py`): Opacus DP‑SGD, RDP accounting, epsilon targeting.

@@ -35,6 +35,7 @@ nav:
     - Compliance mapping: features/compliance_mapping.md
   - Technical:
     - Architecture: technical/architecture.md
+    - Local (Docker Compose): technical/local_docker_compose.md
     - Getting started: technical/getting_started.md
     - Install & deploy: technical/install_and_deploy.md
     - Configuration matrix: technical/configuration_matrix.md
