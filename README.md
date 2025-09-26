@@ -13,7 +13,7 @@ Private ML. Collaborative Intelligence.
   <!-- TODO: Replace with real badge when CI is wired -->
   <img alt="CI" src="https://img.shields.io/badge/CI-passing-brightgreen.svg" />
   <a href="https://github.com/clyrai/Aegis/pkgs/container/aegis"><img alt="GHCR" src="https://img.shields.io/badge/Container-ghcr.io%2Fclyrai%2Faegis-blue?logo=github" /></a>
-  
+  [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/clyrai/Aegis)
 </p>
 
 Aegis is the open-source, compliance‑first orchestration layer for privacy‑preserving ML. It puts Differential Privacy (DP) and Federated Learning (FL) to work in real production—API‑first, audited, observable, and deployable on Docker/Kubernetes.
